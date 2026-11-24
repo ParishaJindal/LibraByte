@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patron Portal | LibraByte – Heritage Library</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/app-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation (Forest Green #244638) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <a href="member-dashboard.html" class="brand-link" title="LibraByte - Read • Reserve • Return">
+          <img src="images/logo-light.png" alt="LibraByte Logo" class="brand-logo-img">
+        </a>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item active">
+          <a href="#overview">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            My Overview
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#myLoans">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            My Borrowed Books
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#myReservations">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            My Reservations Queue
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#catalogSearch">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Browse & Reserve Books
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="profile.html" id="profileNavLink">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-account-card" id="sidebar-account-card">
+          <div class="sidebar-account-heading">ACTIVE PATRON</div>
+          <div class="sidebar-account-name" id="sidebarUserName">Patron Member</div>
+          <div class="sidebar-account-email" id="sidebarUserEmail">member@librabyte.com</div>
+          <div class="sidebar-account-actions">
+            <span class="badge badge-gold">MEMBER</span>
+            <button id="logoutBtn" class="sidebar-logout-btn" title="Sign out of your session">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+        <hr class="sidebar-divider">
+        <div class="sidebar-status-section">
+          <span class="sidebar-status-text">Core Java &bull; SQLite</span>
+          <div class="server-pill">
+            <span class="status-dot"></span> Online
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="header-title">
+            <h1 id="welcomeHeading">Member Dashboard</h1>
+            <p>Track your active loans, manage queue waitlists, and reserve library titles</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="#catalogSearch" class="btn btn-primary btn-sm">Browse Books</a>
+          <button class="btn btn-outline btn-sm" id="topLogoutBtn">Logout</button>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Patron Overview Metrics -->
+        <section id="overview" class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrapper icon-green">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Currently Borrowed</span>
+              <span class="stat-value" id="statLoans">0</span>
+              <span class="stat-subtext" id="statLoansSub">Active library loans</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper icon-amber">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Active Reservations</span>
+              <span class="stat-value" id="statReservations">0</span>
+              <span class="stat-subtext" id="statReservationsSub">FIFO queue waitlists</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper icon-red">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Overdue Books</span>
+              <span class="stat-value" id="statOverdue">0</span>
+              <span class="stat-subtext">Prompt return appreciated</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper icon-purple">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Membership Status</span>
+              <span class="stat-value" id="statStatus"
+                style="font-size: 1.35rem; color: var(--sidebar-bg);">ACTIVE</span>
+              <span class="stat-subtext" id="statMemberId">Member ID: #—</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 1: My Borrowed Books -->
+        <section id="myLoans" class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                My Borrowed Books & Loan Due Dates
+              </h2>
+              <span class="card-subtitle">Books currently checked out in your custody</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="loadMemberLoans()">Refresh Loans</button>
+          </div>
+          <div class="card-body" style="padding: 0;">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Loan ID</th>
+                    <th>Book Title</th>
+                    <th>ISBN</th>
+                    <th>Borrowed Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="loansTableBody">
+                  <tr>
+                    <td colspan="6" class="empty-state">
+                      <div class="empty-state-icon">📖</div>
+                      <h3>Loading your borrowed books...</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: My Reservation Queues & Position -->
+        <section id="myReservations" class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                My Active Reservation Queues
+              </h2>
+              <span class="card-subtitle">Real-time FIFO queue positions for unavailable books</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="loadMemberReservations()">Refresh Waitlist</button>
+          </div>
+          <div class="card-body">
+            <div id="reservationsContainer">
+              <div class="empty-state">
+                <div class="empty-state-icon">⏳</div>
+                <h3>Loading reservation queues...</h3>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Browse Catalog & Instant Reservation -->
+        <section id="catalogSearch" class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Browse & Reserve Library Books
+              </h2>
+              <span class="card-subtitle">Search titles across the catalog; instantly queue reservations when all copies
+                are checked out</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="toolbar">
+              <div class="search-box">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="catalogSearchInput" class="search-input"
+                  placeholder="Search by title, author, category, or ISBN...">
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <select id="memberCategoryFilter" class="form-control" style="width: auto; padding: 0.6rem 0.85rem;"
+                  onchange="filterMemberCatalog()">
+                  <option value="">All Categories</option>
+                  <option value="C Programming">C Programming</option>
+                  <option value="Computer Networks">Computer Networks</option>
+                  <option value="Operating Systems">Operating Systems</option>
+                  <option value="Java Programming">Java Programming</option>
+                  <option value="Database Management Systems (DBMS)">Database Management Systems (DBMS)</option>
+                  <option value="Frontend Development">Frontend Development</option>
+                  <option value="Discrete Mathematics">Discrete Mathematics</option>
+                </select>
+                <div style="font-size: 0.85rem; color: var(--text-muted); white-space: nowrap;"
+                  id="catalogCountDisplay">Showing library books</div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Title & Author</th>
+                    <th>Category</th>
+                    <th>Publisher</th>
+                    <th>Availability</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="catalogTableBody">
+                  <tr>
+                    <td colspan="5" class="empty-state">
+                      <div class="empty-state-icon">📚</div>
+                      <h3>Loading library catalog...</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: My Profile Card -->
+        <section id="myProfile" class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              My Patron Profile Details
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="profileFullName" class="form-control" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="text" id="profileEmail" class="form-control" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Account Role</label>
+                <input type="text" id="profileRole" class="form-control" readonly value="Patron Member (MEMBER)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Linked Library Patron ID</label>
+                <input type="text" id="profileMemberId" class="form-control" readonly>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    let currentUser = null;
+    let allBooks = [];
+
+    // Toast helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // Check authentication on initial load
+    async function initAuth() {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (!response.ok) {
+          window.location.href = 'login.html?unauthorized=true';
+          return;
+        }
+        currentUser = await response.json();
+
+        // Update UI with user info
+        document.getElementById('sidebarUserName').textContent = currentUser.fullName;
+        document.getElementById('sidebarUserEmail').textContent = currentUser.email;
+        document.getElementById('welcomeHeading').textContent = `Welcome, ${currentUser.fullName}`;
+        document.getElementById('statMemberId').textContent = currentUser.memberId ? `Member ID: #${currentUser.memberId}` : 'Member Account';
+
+        document.getElementById('profileFullName').value = currentUser.fullName;
+        document.getElementById('profileEmail').value = currentUser.email;
+        document.getElementById('profileMemberId').value = currentUser.memberId ? `#${currentUser.memberId}` : 'None';
+
+        // Load member data
+        await Promise.all([
+          loadMemberLoans(),
+          loadMemberReservations(),
+          loadCatalog()
+        ]);
+
+      } catch (err) {
+        console.error('Auth verification failed:', err);
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Load Loans for this member
+    async function loadMemberLoans() {
+      const tbody = document.getElementById('loansTableBody');
+      try {
+        const res = await fetch('/api/issues');
+        if (!res.ok) throw new Error('Failed to fetch loans');
+        const loans = await res.json();
+
+        const activeLoans = loans.filter(l => l.status === 'ISSUED' || l.status === 'OVERDUE');
+        document.getElementById('statLoans').textContent = activeLoans.length;
+
+        // Count overdue
+        const todayStr = new Date().toISOString().split('T')[0];
+        let overdueCount = 0;
+        activeLoans.forEach(l => {
+          if (l.dueDate && l.dueDate < todayStr) overdueCount++;
+        });
+        document.getElementById('statOverdue').textContent = overdueCount;
+
+        if (activeLoans.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="empty-state">
+                <div class="empty-state-icon">📖</div>
+                <h3>No Active Borrowed Books</h3>
+                <p>You have no books currently checked out. Browse the catalog below to find your next read!</p>
+              </td>
+            </tr>`;
+          return;
+        }
+
+        tbody.innerHTML = activeLoans.map(l => {
+          const isOverdue = l.dueDate && l.dueDate < todayStr;
+          return `
+            <tr>
+              <td><code>#${l.id}</code></td>
+              <td><strong>${escapeHtml(l.bookTitle || 'Book #' + l.bookId)}</strong></td>
+              <td><code>${escapeHtml(l.bookIsbn || '—')}</code></td>
+              <td>${l.issueDate || '—'}</td>
+              <td style="${isOverdue ? 'color: var(--danger-text); font-weight: 600;' : ''}">
+                ${l.dueDate || '—'} ${isOverdue ? '<span class="badge badge-danger">OVERDUE</span>' : ''}
+              </td>
+              <td>
+                <span class="badge ${isOverdue ? 'badge-danger' : 'badge-success'}">
+                  ${isOverdue ? 'OVERDUE' : 'BORROWED'}
+                </span>
+              </td>
+            </tr>`;
+        }).join('');
+
+      } catch (err) {
+        console.error('Error loading loans:', err);
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--danger-text); padding: 1.5rem;">Failed to load loans.</td></tr>`;
+      }
+    }
+
+    // Load Reservations for this member
+    async function loadMemberReservations() {
+      const container = document.getElementById('reservationsContainer');
+      try {
+        const res = await fetch('/api/reservations');
+        if (!res.ok) throw new Error('Failed to fetch reservations');
+        const reservations = await res.json();
+
+        const activeReservations = reservations.filter(r => r.status === 'WAITING' || r.status === 'ALLOCATED');
+        document.getElementById('statReservations').textContent = activeReservations.length;
+
+        if (activeReservations.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">⏳</div>
+              <h3>No Active Reservations</h3>
+              <p>When a book has 0 available copies, you can reserve it to hold your place in the FIFO queue.</p>
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = activeReservations.map(r => {
+          const isAllocated = r.status === 'ALLOCATED';
+          return `
+            <div class="queue-card" style="${isAllocated ? 'border-left-color: var(--sidebar-bg); background: #FAFDFB;' : ''}">
+              <div style="display: flex; align-items: center; gap: 1.25rem;">
+                <div class="queue-badge-pos" style="${isAllocated ? 'background-color: var(--sidebar-bg);' : ''}">
+                  <span>POS</span>
+                  #${r.queuePosition}
+                </div>
+                <div>
+                  <h3 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--text-main); margin-bottom: 0.2rem;">
+                    ${escapeHtml(r.bookTitle || 'Book #' + r.bookId)}
+                  </h3>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">
+                    Author: ${escapeHtml(r.bookAuthor || '—')} &bull; Reserved on: ${r.reservationDate}
+                  </div>
+                  <div style="margin-top: 0.45rem;">
+                    <span class="badge ${isAllocated ? 'badge-success' : 'badge-gold'}">
+                      ${isAllocated ? 'ALLOCATED — Ready for Pickup at Desk!' : 'WAITING IN QUEUE (Position #' + r.queuePosition + ')'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-outline btn-sm" onclick="cancelReservation(${r.id}, '${escapeHtml(r.bookTitle || 'this book')}')">
+                  Cancel Waitlist
+                </button>
+              </div>
+            </div>`;
+        }).join('');
+
+      } catch (err) {
+        console.error('Error loading reservations:', err);
+        container.innerHTML = `<div style="text-align: center; color: var(--danger-text); padding: 1.5rem;">Failed to load reservations.</div>`;
+      }
+    }
+
+    // Cancel a member's own reservation
+    async function cancelReservation(reservationId, title) {
+      if (!confirm(`Are you sure you want to cancel your reservation for "${title}"? You will give up your place in the queue.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/reservations/${reservationId}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Reservation cancelled. The queue has been automatically updated.', 'success');
+          await loadMemberReservations();
+          await loadCatalog();
+        } else {
+          showToast(data.error || 'Failed to cancel reservation', 'error');
+        }
+      } catch (err) {
+        console.error('Cancel error:', err);
+        showToast('Server connection error', 'error');
+      }
+    }
+
+    // Load Book Catalog
+    async function loadCatalog() {
+      const tbody = document.getElementById('catalogTableBody');
+      try {
+        const res = await fetch('/api/books');
+        if (!res.ok) throw new Error('Failed to load books');
+        allBooks = await res.json();
+        renderCatalog(allBooks);
+      } catch (err) {
+        console.error('Catalog error:', err);
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger-text); padding: 1.5rem;">Failed to load book catalog.</td></tr>`;
+      }
+    }
+
+    // Render Catalog
+    function renderCatalog(books) {
+      const tbody = document.getElementById('catalogTableBody');
+      document.getElementById('catalogCountDisplay').textContent = `Showing ${books.length} titles`;
+
+      if (books.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-state">
+              <div class="empty-state-icon">🔍</div>
+              <h3>No matching books found</h3>
+              <p>Try searching with another keyword or author name.</p>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = books.map(b => {
+        const isAvailable = b.availableCopies > 0;
+        return `
+          <tr>
+            <td>
+              <div style="font-weight: 600; color: var(--text-main);">${escapeHtml(b.title)}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(b.author)} &bull; ISBN: ${escapeHtml(b.isbn)}</div>
+            </td>
+            <td><span class="badge badge-info">${escapeHtml(b.category)}</span></td>
+            <td><span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(b.publisher || '—')}</span></td>
+            <td>
+              <span class="badge ${isAvailable ? 'badge-success' : 'badge-danger'}">
+                ${isAvailable ? `${b.availableCopies} of ${b.totalCopies} Available` : 'All Copies Checked Out'}
+              </span>
+            </td>
+            <td>
+              ${isAvailable
+            ? `<span style="font-size: 0.82rem; color: var(--sidebar-bg); font-weight: 600;">Visit desk to borrow</span>`
+            : `<button class="btn btn-bronze btn-sm" onclick="reserveBook(${b.id}, '${escapeHtml(b.title)}')">Reserve Copy (Queue)</button>`
+          }
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    // Reserve Book (FIFO Queue)
+    async function reserveBook(bookId, bookTitle) {
+      if (!confirm(`All copies of "${bookTitle}" are currently issued. Would you like to enter the FIFO reservation queue for the next returned copy?`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/reservations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookId })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          showToast(`Success! You reserved "${bookTitle}". Your queue position is #${data.queuePosition}.`, 'success');
+          await loadMemberReservations();
+        } else {
+          showToast(data.error || 'Failed to place reservation.', 'error');
+        }
+      } catch (err) {
+        console.error('Reservation error:', err);
+        showToast('Server connection error. Please try again.', 'error');
+      }
+    }
+
+    // Catalog Search & Category Filter
+    function filterMemberCatalog() {
+      const q = document.getElementById('catalogSearchInput').value.toLowerCase().trim();
+      const cat = document.getElementById('memberCategoryFilter').value;
+      let filtered = allBooks;
+      if (cat) {
+        filtered = filtered.filter(b => b.category === cat);
+      }
+      if (q) {
+        filtered = filtered.filter(b =>
+          (b.title && b.title.toLowerCase().includes(q)) ||
+          (b.author && b.author.toLowerCase().includes(q)) ||
+          (b.category && b.category.toLowerCase().includes(q)) ||
+          (b.isbn && b.isbn.toLowerCase().includes(q))
+        );
+      }
+      renderCatalog(filtered);
+    }
+
+    const searchInput = document.getElementById('catalogSearchInput');
+    searchInput.addEventListener('input', filterMemberCatalog);
+
+    // Logout
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } catch (e) {
+        console.error(e);
+      }
+      localStorage.removeItem('librabyte_user');
+      window.location.href = 'login.html?logged_out=true';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    document.getElementById('topLogoutBtn').addEventListener('click', handleLogout);
+
+    // Mobile Menu Toggle
+    const mobileBtn = document.getElementById('mobile-menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    if (mobileBtn) {
+      mobileBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Start
+    initAuth();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | LibraByte – Heritage Library Queue Optimizer</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/app-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <a href="index.html" title="LibraByte Heritage Library">
+        <img src="images/logo.png" alt="LibraByte Logo" class="auth-logo">
+      </a>
+      <h1>Create an Account</h1>
+      <p>Register as a library member to reserve books and track your loans</p>
+    </div>
+
+    <div class="auth-card">
+      <!-- Error / Success Alert Container -->
+      <div id="authAlert" class="auth-alert" style="display: none;"></div>
+
+      <form id="signupForm" novalidate>
+        <div class="form-group">
+          <label for="fullName" class="form-label">Full Name *</label>
+          <input 
+            type="text" 
+            id="fullName" 
+            name="fullName" 
+            class="form-control" 
+            placeholder="e.g. Ananya Verma" 
+            required 
+            autocomplete="name"
+            autofocus
+          >
+          <small id="nameError" class="field-error" style="color: var(--danger-text); font-size: 0.78rem; display: none; margin-top: 0.25rem;"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address *</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-control" 
+            placeholder="e.g. ananya.verma@gmail.com" 
+            required 
+            autocomplete="email"
+          >
+          <small id="emailError" class="field-error" style="color: var(--danger-text); font-size: 0.78rem; display: none; margin-top: 0.25rem;"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="phone" class="form-label">Phone Number *</label>
+          <input 
+            type="tel" 
+            id="phone" 
+            name="phone" 
+            class="form-control" 
+            placeholder="e.g. +91-98102-34502" 
+            required 
+            autocomplete="tel"
+          >
+          <small id="phoneError" class="field-error" style="color: var(--danger-text); font-size: 0.78rem; display: none; margin-top: 0.25rem;"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password * (Minimum 6 characters)</label>
+          <div class="password-input-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-control" 
+              placeholder="Create a secure password" 
+              required 
+              autocomplete="new-password"
+            >
+            <button type="button" class="password-toggle-btn" id="togglePasswordBtn" title="Toggle password visibility" aria-label="Toggle password visibility">
+              <svg id="eyeIcon1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <small id="passwordError" class="field-error" style="color: var(--danger-text); font-size: 0.78rem; display: none; margin-top: 0.25rem;"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password *</label>
+          <div class="password-input-wrapper">
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              name="confirmPassword" 
+              class="form-control" 
+              placeholder="Re-enter your password" 
+              required 
+              autocomplete="new-password"
+            >
+            <button type="button" class="password-toggle-btn" id="toggleConfirmBtn" title="Toggle password visibility" aria-label="Toggle confirm password visibility">
+              <svg id="eyeIcon2" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <small id="confirmError" class="field-error" style="color: var(--danger-text); font-size: 0.78rem; display: none; margin-top: 0.25rem;"></small>
+        </div>
+
+        <div style="margin: 1.25rem 0 1.5rem; font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
+          By creating an account, you agree to the LibraByte Library circulation guidelines and fair-queue reservation rules.
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-auth-submit" id="signupBtn">
+          <span>Create Account</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="auth-footer">
+      Already have a library account? <a href="login.html">Sign In</a>
+    </div>
+  </div>
+
+  <script>
+    // Password toggles
+    function setupPasswordToggle(btnId, inputId, iconId) {
+      const btn = document.getElementById(btnId);
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+
+      btn.addEventListener('click', () => {
+        const isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        icon.innerHTML = isPassword
+          ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>'
+          : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      });
+    }
+
+    setupPasswordToggle('togglePasswordBtn', 'password', 'eyeIcon1');
+    setupPasswordToggle('toggleConfirmBtn', 'confirmPassword', 'eyeIcon2');
+
+    // Alert helper
+    function showAlert(message, type) {
+      const alertBox = document.getElementById('authAlert');
+      alertBox.textContent = message;
+      alertBox.className = 'auth-alert ' + (type === 'success' ? 'auth-alert-success' : 'auth-alert-error');
+      alertBox.style.display = 'flex';
+    }
+
+    function hideAlert() {
+      const alertBox = document.getElementById('authAlert');
+      alertBox.style.display = 'none';
+    }
+
+    function clearFieldErrors() {
+      document.querySelectorAll('.field-error').forEach(el => {
+        el.textContent = '';
+        el.style.display = 'none';
+      });
+      document.querySelectorAll('.form-control').forEach(el => {
+        el.style.borderColor = '';
+      });
+    }
+
+    function setFieldError(fieldId, errorId, message) {
+      const field = document.getElementById(fieldId);
+      const errorEl = document.getElementById(errorId);
+      field.style.borderColor = 'var(--danger-border)';
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    // Validation Regex
+    const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/;
+
+    const signupForm = document.getElementById('signupForm');
+    const signupBtn = document.getElementById('signupBtn');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      clearFieldErrors();
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      let hasError = false;
+
+      // 1. Full name validation
+      if (!fullName) {
+        setFieldError('fullName', 'nameError', 'Please enter your full name.');
+        hasError = true;
+      } else if (fullName.length < 2) {
+        setFieldError('fullName', 'nameError', 'Full name must be at least 2 characters.');
+        hasError = true;
+      }
+
+      // 2. Email validation
+      if (!email) {
+        setFieldError('email', 'emailError', 'Please enter your email address.');
+        hasError = true;
+      } else if (!EMAIL_REGEX.test(email)) {
+        setFieldError('email', 'emailError', 'Please enter a valid email address (e.g. name@domain.com).');
+        hasError = true;
+      }
+
+      // 3. Phone validation
+      if (!phone) {
+        setFieldError('phone', 'phoneError', 'Please enter your contact phone number.');
+        hasError = true;
+      } else if (phone.length < 7) {
+        setFieldError('phone', 'phoneError', 'Phone number must contain at least 7 digits.');
+        hasError = true;
+      }
+
+      // 4. Password validation
+      if (!password) {
+        setFieldError('password', 'passwordError', 'Please enter a password.');
+        hasError = true;
+      } else if (password.length < 6) {
+        setFieldError('password', 'passwordError', 'Password must be at least 6 characters long.');
+        hasError = true;
+      }
+
+      // 5. Confirm password match
+      if (!confirmPassword) {
+        setFieldError('confirmPassword', 'confirmError', 'Please confirm your password.');
+        hasError = true;
+      } else if (password !== confirmPassword) {
+        setFieldError('confirmPassword', 'confirmError', 'Passwords do not match. Please re-enter.');
+        hasError = true;
+      }
+
+      if (hasError) {
+        showAlert('Please correct the highlighted errors above.', 'error');
+        return;
+      }
+
+      signupBtn.disabled = true;
+      signupBtn.innerHTML = '<span>Creating your account...</span>';
+
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fullName,
+            email,
+            phone,
+            password,
+            confirmPassword,
+            role: 'MEMBER'
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert('Registration successful! Redirecting to login...', 'success');
+          setTimeout(() => {
+            window.location.href = 'login.html?registered=true';
+          }, 1200);
+        } else {
+          showAlert(data.error || 'Registration failed. Please verify your details.', 'error');
+          if (data.error && data.error.toLowerCase().includes('already exists')) {
+            setFieldError('email', 'emailError', 'This email address is already registered.');
+          }
+          signupBtn.disabled = false;
+          signupBtn.innerHTML = '<span>Create Account</span>';
+        }
+      } catch (err) {
+        console.error('Signup error:', err);
+        showAlert('Unable to reach the server. Please try again in a moment.', 'error');
+        signupBtn.disabled = false;
+        signupBtn.innerHTML = '<span>Create Account</span>';
+      }
+    });
+  </script>
+</body>
+</html>

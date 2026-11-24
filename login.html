@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | LibraByte – Heritage Library Queue Optimizer</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/app-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <a href="index.html" title="LibraByte Heritage Library">
+        <img src="images/logo.png" alt="LibraByte Logo" class="auth-logo">
+      </a>
+      <h1>Welcome Back</h1>
+      <p>Sign in to access your library account and reservations</p>
+    </div>
+
+    <div class="auth-card">
+      <!-- Error / Success Alert Container -->
+      <div id="authAlert" class="auth-alert" style="display: none;"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-control" 
+            placeholder="e.g. aarav.sharma@gmail.com" 
+            required 
+            autocomplete="email"
+            autofocus
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="password-input-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-control" 
+              placeholder="Enter your password" 
+              required 
+              autocomplete="current-password"
+            >
+            <button type="button" class="password-toggle-btn" id="togglePasswordBtn" title="Toggle password visibility" aria-label="Toggle password visibility">
+              <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-extras">
+          <label class="remember-group">
+            <input type="checkbox" id="rememberMe" name="rememberMe">
+            <span>Remember me for 7 days</span>
+          </label>
+          <a href="#" class="forgot-link" id="forgotPasswordLink">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-auth-submit" id="loginBtn">
+          <span>Sign In to LibraByte</span>
+        </button>
+      </form>
+
+      <!-- Quick Demo Credentials for Evaluation -->
+      <details class="demo-credentials-box">
+        <summary>Demo Evaluation Credentials</summary>
+        <div class="demo-credentials-content">
+          <div><strong>Admin Portal:</strong> <span class="demo-pill" onclick="fillCredentials('admin@librabyte.com', 'Admin@123')">admin@librabyte.com / Admin@123</span></div>
+          <div><strong>Patron Member:</strong> <span class="demo-pill" onclick="fillCredentials('aarav.sharma@gmail.com', 'Member@123')">aarav.sharma@gmail.com / Member@123</span></div>
+          <div><strong>Patron Member 2:</strong> <span class="demo-pill" onclick="fillCredentials('ananya.verma@gmail.com', 'Member@123')">ananya.verma@gmail.com / Member@123</span></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="auth-footer">
+      Don't have an account yet? <a href="signup.html">Create an Account</a>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal-overlay" id="forgotModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Password Recovery</h3>
+        <button class="modal-close" id="closeForgotModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
+          In accordance with the heritage library security protocol, password resets for library accounts are verified by the head librarian.
+        </p>
+        <div style="background-color: var(--bg-surface-warm); border: 1px solid var(--border-light); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.88rem;">
+          <p><strong>Demo Password Reference:</strong></p>
+          <ul style="margin: 0.5rem 0 0 1.25rem; color: var(--text-muted);">
+            <li><strong>Administrator:</strong> <code>Admin@123</code></li>
+            <li><strong>Patron Members:</strong> <code>Member@123</code></li>
+          </ul>
+        </div>
+        <div class="form-group" style="margin-top: 1.25rem;">
+          <label for="resetEmail" class="form-label">Enter your registered email address</label>
+          <input type="email" id="resetEmail" class="form-control" placeholder="your.name@example.com">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelForgotBtn">Cancel</button>
+        <button class="btn btn-primary" id="sendResetBtn">Send Recovery Request</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // Toggle Password Visibility
+    const toggleBtn = document.getElementById('togglePasswordBtn');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+      eyeIcon.innerHTML = isPassword
+        ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>'
+        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    });
+
+    // Fill demo credentials
+    function fillCredentials(email, pwd) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = pwd;
+      showAlert('Demo credentials filled: ' + email, 'success');
+    }
+
+    // Check URL parameters for notices
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('registered') === 'true') {
+      showAlert('Account successfully registered! Please log in with your credentials.', 'success');
+    } else if (urlParams.get('logged_out') === 'true') {
+      showAlert('You have been signed out successfully.', 'success');
+    } else if (urlParams.get('expired') === 'true') {
+      showAlert('Your session has expired. Please sign in again.', 'error');
+    } else if (urlParams.get('unauthorized') === 'true') {
+      showAlert('Please log in with administrator privileges to access that section.', 'error');
+    }
+
+    // Alert helper
+    function showAlert(message, type) {
+      const alertBox = document.getElementById('authAlert');
+      alertBox.textContent = message;
+      alertBox.className = 'auth-alert ' + (type === 'success' ? 'auth-alert-success' : 'auth-alert-error');
+      alertBox.style.display = 'flex';
+    }
+
+    function hideAlert() {
+      const alertBox = document.getElementById('authAlert');
+      alertBox.style.display = 'none';
+    }
+
+    // Toast Notification helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Login Form Submit
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const rememberMe = document.getElementById('rememberMe').checked;
+
+      // Basic client validation
+      if (!email || !password) {
+        showAlert('Please enter both email address and password.', 'error');
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '<span>Verifying credentials...</span>';
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, rememberMe })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert(`Welcome back, ${data.fullName}! Redirecting...`, 'success');
+          // Store minimal non-sensitive user profile in localStorage for UI convenience
+          localStorage.setItem('librabyte_user', JSON.stringify({
+            id: data.id,
+            fullName: data.fullName,
+            email: data.email,
+            role: data.role,
+            memberId: data.memberId
+          }));
+
+          setTimeout(() => {
+            if (data.role === 'ADMIN') {
+              window.location.href = 'index.html';
+            } else {
+              window.location.href = 'member-dashboard.html';
+            }
+          }, 800);
+        } else {
+          showAlert(data.error || 'Invalid credentials. Please verify your email and password.', 'error');
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = '<span>Sign In to LibraByte</span>';
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        showAlert('Unable to reach the server. Please check your connection.', 'error');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<span>Sign In to LibraByte</span>';
+      }
+    });
+
+    // Forgot Password Modal Handlers
+    const forgotLink = document.getElementById('forgotPasswordLink');
+    const forgotModal = document.getElementById('forgotModal');
+    const closeForgotModal = document.getElementById('closeForgotModal');
+    const cancelForgotBtn = document.getElementById('cancelForgotBtn');
+    const sendResetBtn = document.getElementById('sendResetBtn');
+
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotModal.classList.add('active');
+    });
+
+    function closeForgot() {
+      forgotModal.classList.remove('active');
+    }
+
+    closeForgotModal.addEventListener('click', closeForgot);
+    cancelForgotBtn.addEventListener('click', closeForgot);
+    forgotModal.addEventListener('click', (e) => {
+      if (e.target === forgotModal) closeForgot();
+    });
+
+    sendResetBtn.addEventListener('click', () => {
+      const email = document.getElementById('resetEmail').value.trim();
+      if (!email) {
+        alert('Please enter your email address.');
+        return;
+      }
+      closeForgot();
+      showToast('Password reset instructions recorded. Use demo password Admin@123 or Member@123.', 'success');
+    });
+  </script>
+</body>
+</html>
